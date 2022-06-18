@@ -54,16 +54,14 @@ async fn webdriver(browser:String,port:i32) -> WebDriverResult<()>{
 #[clap(author, version, about, long_about = None)]
 
 struct Args {
-    #[clap(short,long, value_parser, default_value = "Chrome")]
+    #[clap(short,long, value_parser, default_value = "Firefox")]
     browser: String,
 }
 
 fn main() -> WebDriverResult<()> {
     let args = Args::parse();
-    println!("{:?}",args);
     static LIVE: AtomicBool = AtomicBool::new(true);
     let browser = args.browser;
-    println!("browser :{}",&browser);
     let port:i32 = 4444;
     let handler = webdriver_init(&browser,port,&LIVE);
     let result = webdriver(browser,port);
