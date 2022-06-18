@@ -60,6 +60,7 @@ struct Args {
 
 fn main() -> WebDriverResult<()> {
     let args = Args::parse();
+    println!("{:?}",args);
     static LIVE: AtomicBool = AtomicBool::new(true);
     let browser = args.browser;
     println!("browser :{}",&browser);

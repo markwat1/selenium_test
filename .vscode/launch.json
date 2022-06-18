@@ -7,15 +7,15 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'selenium'",
+            "name": "Debug executable 'selenium_test'",
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=selenium",
-                    "--package=selenium"
+                    "--bin=selenium_test",
+                    "--package=selenium_test"
                 ],
                 "filter": {
-                    "name": "selenium",
+                    "name": "selenium_test",
                     "kind": "bin"
                 }
             },
@@ -25,20 +25,20 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in executable 'selenium'",
+            "name": "Debug unit tests in executable 'selenium_test'",
             "cargo": {
                 "args": [
                     "test",
                     "--no-run",
-                    "--bin=selenium",
-                    "--package=selenium"
+                    "--bin=selenium_test",
+                    "--package=selenium_test"
                 ],
                 "filter": {
-                    "name": "selenium",
+                    "name": "selenium_test",
                     "kind": "bin"
                 }
             },
-            "args": ["--browser","Firefox"],
+            "args": [],
             "cwd": "${workspaceFolder}"
         }
     ]
