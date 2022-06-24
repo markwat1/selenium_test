@@ -1,14 +1,14 @@
 use thirtyfour::prelude::*;
 use tokio;
 use webdriver_install::Driver;
-use std::process::{Command};
-use std::thread::JoinHandle;
 use std::{thread,time};
+use std::thread::JoinHandle;
+use std::process::{Command};
+use std::sync::atomic::{AtomicBool,Ordering};
 use dirs;
 use clap::Parser;
-use std::sync::atomic::{AtomicBool,Ordering};
 
-//use std::path::PathBuf;
+mod sequence_parser;
 
 fn webdriver_init(browser:&String, port: i32, live:&'static AtomicBool) -> JoinHandle<()>{
     let mut driver_name = "chromedriver";
@@ -35,7 +35,8 @@ fn webdriver_init(browser:&String, port: i32, live:&'static AtomicBool) -> JoinH
 
 
 #[tokio::main]
-async fn webdriver(browser:String,port:i32) -> WebDriverResult<()>{
+
+async fn webdriver(browser:String,port:i32,sequence_file:String) -> WebDriverResult<()>{
     let driver:WebDriver;
     let server_url = format!("http://localhost:{}",port);
     if browser == "Firefox" {
@@ -46,6 +47,11 @@ async fn webdriver(browser:String,port:i32) -> WebDriverResult<()>{
     // Navigate to URL.
     driver.get("http://www.watana.be/").await?;
     thread::sleep(time::Duration::from_secs(3));
+    let v = sequence_parser::load_sequence(&sequence_file).unwrap();
+    println!("{:?}",v);
+    println!("Version : {}",sequence_parser::get_version(&v));
+    println!("Comment : {}",sequence_parser::get_comment(&v));
+    println!("url:{}",sequence_parser::get_url(&v));
     driver.quit().await?;
     Ok(())
 }
@@ -56,15 +62,18 @@ async fn webdriver(browser:String,port:i32) -> WebDriverResult<()>{
 struct Args {
     #[clap(short,long, value_parser, default_value = "Firefox")]
     browser: String,
+    #[clap(short, long, value_parser, default_value = "sequence.json")]
+    sequence: String
 }
 
 fn main() -> WebDriverResult<()> {
     let args = Args::parse();
     static LIVE: AtomicBool = AtomicBool::new(true);
     let browser = args.browser;
+    let sequence_file = args.sequence;
     let port:i32 = 4444;
     let handler = webdriver_init(&browser,port,&LIVE);
-    let result = webdriver(browser,port);
+    let result = webdriver(browser,port,sequence_file);
     LIVE.store(false,Ordering::Relaxed);
     handler.join().expect("Cannot join");
     result

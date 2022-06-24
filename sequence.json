@@ -1,0 +1,94 @@
+{
+    "version":1,
+    "comment":"test url",
+    "url":"https://www.watana.be/",
+    "sequence" : [
+        {
+            "comment":"start page",
+            "wait_item":{
+                "type":"class",
+                "index":0,
+                "name":"button1"
+            },
+            "commands":[
+                {
+                    "comment":"send key value int textbox",
+                    "command":"sendkeys",
+                    "parameters":{
+                        "target":{
+                            "type":"class",
+                            "index":0,
+                            "name":"textbox"
+                        },
+                        "value":"Value"
+                    }
+                },
+                {
+                    "comment":"drop file",
+                    "command":"dropfile",
+                    "parameters":{
+                        "target":{
+                            "type":"id",
+                            "name":"drop",
+                            "filename":"file.txt"
+                        }
+                    }
+                },
+                {
+                    "comment":"click button",
+                    "command":"click",
+                    "parameters":{
+                        "target":{
+                            "type":"id",
+                            "name":"button"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "comment":"next page",
+            "wait_item":{
+                "comment":"wait button1",
+                "type":"class",
+                "index":0,
+                "name":"button1"
+            },
+            "commands":[
+                {
+                    "comment":"input value",
+                    "command":"sendkeys",
+                    "parameters":{
+                        "target":{
+                            "type":"class",
+                            "index":0,
+                            "name":"textbox"
+                        },
+                        "value":"Value"
+                    }
+                },
+                {
+                    "comment":"drop file",
+                    "command":"dropfile",
+                    "parameters":{
+                        "target":{
+                            "type":"id",
+                            "name":"drop",
+                            "filename":"file.txt"
+                        }
+                    }
+                },
+                {
+                    "comment":"Click on button",
+                    "command":"click",
+                    "parameters":{
+                        "target":{
+                            "type":"id",
+                            "name":"button"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
