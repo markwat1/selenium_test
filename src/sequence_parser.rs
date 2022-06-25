@@ -9,8 +9,8 @@ pub fn load_sequence(file_name:&str) -> Result<Value,Box<dyn Error>> {
     Ok(v)
 }
 
-pub fn get_url(v:&Value) -> String {
-    let v = match v.get("url"){
+pub fn get_url_pattern(v:&Value) -> String {
+    let v = match v.get("url_pattern"){
         None => return "".to_string(),
         Some(s) => s
     };

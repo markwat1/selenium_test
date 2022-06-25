@@ -1,7 +1,7 @@
 {
     "version":1,
     "comment":"test url",
-    "url":"https://www.watana.be/",
+    "url_pattern":"https://www.watana.be/",
     "sequence" : [
         {
             "comment":"start page",
