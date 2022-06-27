@@ -75,7 +75,7 @@ async fn webdriver(browser:String,port:i32,sequence_file:String) -> WebDriverRes
     println!("{:?}",v);
     println!("Version : {}",sequence_parser::get_version(&v));
     println!("Comment : {}",sequence_parser::get_comment(&v));
-    println!("url:{}",sequence_parser::get_url_pattern(&v));
+    println!("urls:{:?}",sequence_parser::get_url_patterns(&v));
     driver.quit().await?;
     Ok(())
 }

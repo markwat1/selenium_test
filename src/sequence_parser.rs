@@ -1,6 +1,7 @@
 use serde_json::Value;
 use std::io::BufReader;
 use std::fs;
+use std::vec::Vec;
 use std::error::Error;
 
 pub fn load_sequence(file_name:&str) -> Result<Value,Box<dyn Error>> {
@@ -9,15 +10,24 @@ pub fn load_sequence(file_name:&str) -> Result<Value,Box<dyn Error>> {
     Ok(v)
 }
 
-pub fn get_url_pattern(v:&Value) -> String {
-    let v = match v.get("url_pattern"){
-        None => return "".to_string(),
+pub fn get_url_patterns(v:&Value) -> Vec<String> {
+    let mut patterns = Vec::new();
+    let v = match v.get("patterns"){
+        None => return patterns,
         Some(s) => s
     };
-    if v.is_string(){
-        return v.as_str().unwrap().to_string();
+    if v.is_array(){
+        for p in v.as_array().unwrap() {
+            let v = match p.get("url_pattern") {
+                None => return patterns,
+                Some(s) => s
+            };
+            if v.is_string(){
+                patterns.push(v.as_str().unwrap().to_string());
+            }
+        }
     }
-    "".to_string()
+    patterns
 }
 
 pub fn get_comment(v:&Value) -> String {
