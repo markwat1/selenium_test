@@ -31,21 +31,43 @@ fn webdriver_init(browser:&String, port: i32, live:&'static AtomicBool) -> JoinH
         }
         child.kill().expect("Kill error");
     });
-    thread::sleep(time::Duration::from_secs(1));
     jh
 }
 
+static TIMEOUT:u64 = 10;
+
+async fn get_web_driver(browser:String,port:i32) -> WebDriver{
+    let server_url = format!("http://localhost:{}",port);
+    let now = time::SystemTime::now();
+    if browser == "Firefox" {
+        loop{
+            let r = WebDriver::new(&server_url, DesiredCapabilities::firefox()).await;
+            if r.is_ok(){
+                return r.unwrap();
+            }
+            if now.elapsed().unwrap().as_secs() > TIMEOUT {
+                panic!("Web driver Timeout");
+            }
+            thread::sleep(time::Duration::from_secs(1));
+        }
+    }else{
+        loop{
+            let r = WebDriver::new(&server_url, DesiredCapabilities::chrome()).await;
+            if r.is_ok(){
+                return r.unwrap();
+            }
+            if now.elapsed().unwrap().as_secs() > TIMEOUT {
+                panic!("Web driver Timeout");
+            }
+            thread::sleep(time::Duration::from_secs(1));
+        }
+    }
+}
 
 #[tokio::main]
 
 async fn webdriver(browser:String,port:i32,sequence_file:String) -> WebDriverResult<()>{
-    let driver:WebDriver;
-    let server_url = format!("http://localhost:{}",port);
-    if browser == "Firefox" {
-        driver = WebDriver::new(&server_url, DesiredCapabilities::firefox()).await?;
-    }else{
-        driver = WebDriver::new(&server_url, DesiredCapabilities::chrome()).await?;
-    }
+    let driver = get_web_driver(browser,port).await;
     // Navigate to URL.
     driver.get("http://www.watana.be/").await?;
     thread::sleep(time::Duration::from_secs(3));
