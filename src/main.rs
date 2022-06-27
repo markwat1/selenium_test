@@ -22,7 +22,7 @@ fn webdriver_init(browser:&String, port: i32, live:&'static AtomicBool) -> JoinH
     let home_path = dirs::home_dir().unwrap().into_os_string().into_string().unwrap();
     let driver_file = home_path + "/" + default_path + "/" + driver_name;
     let port_arg = format!("--port={}",port);
-    thread::spawn(move ||{
+    let jh = thread::spawn(move ||{
         let mut webdriver  = Command::new(driver_file);
         webdriver.arg(port_arg);
         let mut child = webdriver.spawn().expect("failed to execute process");
@@ -30,7 +30,9 @@ fn webdriver_init(browser:&String, port: i32, live:&'static AtomicBool) -> JoinH
             thread::sleep(time::Duration::from_secs(1));
         }
         child.kill().expect("Kill error");
-    })
+    });
+    thread::sleep(time::Duration::from_secs(1));
+    jh
 }
 
 
